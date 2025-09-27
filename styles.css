@@ -1,0 +1,2735 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* 颜色变量 - 克莱因蓝、靓丽黄和辅助色 */
+    --klein-blue: #002fa7;
+    --bright-yellow: #ffdb00;
+    --dark-blue: #001a5c;
+    --light-blue: #eef1ff;
+    --white: #ffffff;
+    --black: #121212;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-600: #6c757d;
+    --gray-800: #343a40;
+    
+    /* 排版变量 */
+    --font-primary: 'Helvetica Neue', Arial, sans-serif;
+    --font-heading: 'Helvetica Neue', Arial, sans-serif;
+    --font-size-base: 16px;
+    --line-height-base: 1.6;
+    
+    /* 间距变量 */
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 1.5rem;
+    --space-lg: 2.5rem;
+    --space-xl: 4rem;
+    
+    /* 阴影 */
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.2);
+    
+    /* 动画时间 */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--dark-blue);
+    color: var(--white);
+    line-height: var(--line-height-base);
+    font-size: var(--font-size-base);
+    overflow-x: hidden;
+}
+
+/* 全景容器 - 优化为1920*1080分辨率 */
+.panoramic-container {
+    width: 1920px;
+    height: 1080px;
+    margin: 0 auto;
+    padding: var(--space-sm); /* 减少内边距，从var(--space-md)改为var(--space-sm) */
+    position: relative;
+    overflow: hidden;
+}
+
+/* 3D场景 */
+.production-line-3d {
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center;    /* 垂直居中 */
+}
+
+/* 设定默认基准宽度，避免 left% 相对值在小屏过近导致堆叠 */
+.production-line-3d .scene {
+    width: 2200px; /* 基准宽度（大于1920）给设备留出水平间距 */
+    margin: 0 auto; /* 再次保险性的居中 */
+}
+
+/* 在 1400px 以下将基准宽度减小，但仍保持足够间距 */
+@media (max-width: 1400px) {
+    .production-line-3d .scene {
+        width: 2000px;
+    }
+}
+
+/* 在 1200px 以下 */
+@media (max-width: 1200px) {
+    .production-line-3d .scene {
+        width: 1800px;
+    }
+}
+
+/* 在 1024px 以下 */
+@media (max-width: 1024px) {
+    .production-line-3d .scene {
+        width: 1600px; /* 已在之前 media 里覆盖，但再次显式声明避免冲突 */
+    }
+}
+
+/* 在 768px 以下 */
+@media (max-width: 768px) {
+    .production-line-3d .scene {
+        width: 1400px;
+    }
+}
+
+.scene {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(20deg) rotateY(0deg) translateY(5%); /* 调整为向下偏移5%，避免与按钮重叠 */
+    transition: transform 1.5s ease;
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
+    /* 移除padding，改用transform调整 */
+}
+
+/* 标题样式优化 */
+.title {
+    text-align: center;
+    margin-bottom: var(--space-xs); /* 减少下边距，从var(--space-sm)改为var(--space-xs) */
+    color: var(--bright-yellow);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    width: 100%;
+}
+
+/* 控制面板样式优化 */
+.controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px; /* 增加距离到24px（约1.5cm），确保与设备有足够间距 */
+    gap: var(--space-sm);
+}
+
+button {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+#start-all {
+    background-color: #4CAF50;
+    color: var(--white);
+}
+
+#start-all:hover {
+    background-color: #3e8e41;
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+}
+
+#stop-all {
+    background-color: #f44336;
+    color: var(--white);
+}
+
+#stop-all:hover {
+    background-color: #d32f2f;
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+}
+
+#auto-mode {
+    background-color: var(--klein-blue);
+    color: var(--white);
+}
+
+#auto-mode:hover {
+    background-color: var(--dark-blue);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+}
+
+#auto-mode.active {
+    background-color: var(--dark-blue);
+    box-shadow: 0 0 15px rgba(0, 47, 167, 0.6);
+}
+
+#rotate-view {
+    background-color: var(--bright-yellow);
+    color: var(--black);
+}
+
+#rotate-view:hover {
+    background-color: #e6c500;
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+}
+
+#reset-view {
+    background-color: var(--gray-800);
+    color: var(--white);
+}
+
+#reset-view:hover {
+    background-color: var(--gray-600);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+}
+
+/* 设备通用样式 */
+.equipment {
+    position: absolute;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    transition: transform var(--transition-normal);
+}
+
+.equipment:hover {
+    transform: translateY(-5px);
+}
+
+.equipment.selected {
+    z-index: 10;
+}
+
+.model-container {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.model {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.label {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    color: var(--black);
+    letter-spacing: 0.5px;
+}
+
+.status {
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--white);
+    background-color: var(--gray-600);
+    white-space: nowrap;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.face {
+    position: absolute;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(100, 100, 100, 0.3);
+    transition: all var(--transition-normal);
+}
+
+.running .face, 
+.running .chamber, 
+.running .belt, 
+.running .tower, 
+.running .frame {
+    background-color: rgba(76, 175, 80, 0.3);
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+}
+
+.stopped .face, 
+.stopped .chamber, 
+.stopped .belt, 
+.stopped .tower,
+.stopped .frame {
+    background-color: rgba(244, 67, 54, 0.3);
+}
+
+.running .status {
+    background-color: #4CAF50;
+}
+
+.stopped .status {
+    background-color: #f44336;
+}
+
+/* 连接线样式 */
+.connections {
+    transform-style: preserve-3d;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.connection {
+    position: absolute;
+    background-color: var(--gray-600);
+    height: 8px;
+    transform-style: preserve-3d;
+    transform-origin: left center;
+}
+
+/* 设备具体位置 - 重新调整为真正居中 */
+#material-feeding {
+    left: 6%;
+    top: 50%; /* 调整为50%作为基准中心线 */
+    width: 150px;
+    height: 100px;
+}
+
+#z-elevator {
+    left: 16%;
+    top: 35%; /* 相对中心线向上偏移 */
+    width: 80px;
+    height: 250px;
+}
+
+#batch-separator {
+    left: 26%;
+    top: 40%; /* 相对中心线稍微向上 */
+    width: 120px;
+    height: 150px;
+}
+
+#conveyor-20m {
+    left: 36%;
+    top: 48%; /* 接近中心线 */
+    width: 300px;
+    height: 60px;
+    transform: rotateY(0deg);
+}
+
+#conveyor-14m {
+    left: 51%;
+    top: 45%; /* 稍微高于中心线 */
+    width: 200px;
+    height: 60px;
+    transform: rotateY(-5deg);
+}
+
+#coating-machine {
+    left: 66%;
+    top: 50%; /* 中心线位置 */
+    width: 140px;
+    height: 140px;
+}
+
+#big-elevator {
+    left: 76%;
+    top: 30%; /* 向上偏移（高设备） */
+    width: 100px;
+    height: 300px;
+}
+
+#cooling-tower {
+    left: 81%;
+    top: 42%; /* 稍微高于中心线 */
+    width: 120px;
+    height: 180px;
+}
+
+#packaging-machine {
+    left: 86%;
+    top: 50%; /* 中心线位置 */
+    width: 160px;
+    height: 120px;
+}
+
+/* 连接线位置 - 匹配居中后的设备位置 */
+#connection-1 {
+    left: 11%;
+    top: 47%; /* 匹配投料机和Z型提升机之间 */
+    width: 5%;
+    transform: rotateZ(-45deg);
+}
+
+#connection-2 {
+    left: 18%;
+    top: 38%; /* 匹配Z型提升机和分批筒之间 */
+    width: 8%;
+    transform: rotateY(0deg);
+}
+
+#connection-3 {
+    left: 29%;
+    top: 46%; /* 匹配分批筒和输送机之间 */
+    width: 7%;
+    transform: rotateZ(5deg);
+}
+
+#connection-4 {
+    left: 45%;
+    top: 47%; /* 匹配两段输送机之间 */
+    width: 6%;
+    transform: rotateZ(-2deg);
+}
+
+#connection-5 {
+    left: 61%;
+    top: 48%; /* 匹配输送机和包膜机之间 */
+    width: 5%;
+    transform: rotateZ(3deg);
+}
+
+#connection-6 {
+    left: 71%;
+    top: 45%; /* 匹配包膜机和大提升机之间 */
+    width: 5%;
+    transform: rotateZ(-35deg);
+}
+
+#connection-7 {
+    left: 78%;
+    top: 48%; /* 匹配大提升机和冷却塔之间 */
+    width: 3%;
+    transform: rotateZ(15deg);
+}
+
+/* 地坑装料台具体样式 */
+.ground-feeding {
+    transform-style: preserve-3d;
+    transform: rotateX(0deg) rotateY(0deg);
+}
+
+.ground-feeding .face {
+    position: absolute;
+}
+
+.ground-feeding .front {
+    width: 100px;
+    height: 80px;
+    transform: translateZ(50px);
+    background-color: rgba(139, 69, 19, 0.4);
+}
+
+.ground-feeding .back {
+    width: 100px;
+    height: 80px;
+    transform: translateZ(-50px) rotateY(180deg);
+    background-color: rgba(139, 69, 19, 0.4);
+}
+
+.ground-feeding .left {
+    width: 100px;
+    height: 80px;
+    transform: rotateY(-90deg) translateZ(50px);
+    background-color: rgba(139, 69, 19, 0.3);
+}
+
+.ground-feeding .right {
+    width: 100px;
+    height: 80px;
+    transform: rotateY(90deg) translateZ(50px);
+    background-color: rgba(139, 69, 19, 0.3);
+}
+
+.ground-feeding .top {
+    width: 100px;
+    height: 100px;
+    transform: rotateX(90deg) translateZ(-40px);
+    background-color: rgba(139, 69, 19, 0.5);
+}
+
+.ground-feeding .bottom {
+    width: 100px;
+    height: 100px;
+    transform: rotateX(-90deg) translateZ(40px);
+    background-color: rgba(139, 69, 19, 0.2);
+}
+
+.ground-feeding .opening {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.3);
+    top: 20px;
+    left: 20px;
+    border-radius: 5px;
+}
+
+.ground-feeding .material {
+    position: absolute;
+    width: 50px;
+    height: 20px;
+    background-color: #dcb257;
+    transform: translateZ(0) translateY(0) translateX(25px);
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.running .ground-feeding .material {
+    opacity: 1;
+    animation: material-flow 2s infinite;
+}
+
+.ground-feeding .vibrator {
+    position: absolute;
+    width: 80px;
+    height: 15px;
+    background-color: #555;
+    bottom: -15px;
+    left: 10px;
+    transform: translateZ(0);
+}
+
+.ground-feeding .motor {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #333;
+    border-radius: 50%;
+    bottom: -20px;
+    left: 15px;
+    transform: translateZ(5px);
+}
+
+.ground-feeding .motor:before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #333;
+    border-radius: 50%;
+    right: -45px;
+    transform: translateZ(0);
+}
+
+.running .ground-feeding {
+    animation: vibration 0.05s infinite alternate;
+}
+
+/* 皮带输送机样式 */
+.conveyor {
+    position: absolute;
+    transform-style: preserve-3d;
+}
+
+.belt-8m {
+    width: 150px;
+    height: 20px;
+    top: 70px;
+    left: 0;
+    transform: rotateX(0deg) rotateY(0deg) translateZ(0);
+}
+
+.belt {
+    position: absolute;
+    width: 100%;
+    height: 10px;
+    background-color: #333;
+    top: 0;
+    left: 0;
+    transform-style: preserve-3d;
+}
+
+.running .belt {
+    animation: belt-move 2s linear infinite;
+    background: repeating-linear-gradient(
+        90deg,
+        #333,
+        #333 10px,
+        #555 10px,
+        #555 20px
+    );
+}
+
+.roller {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #777;
+    border-radius: 50%;
+    top: -5px;
+}
+
+.left-roller {
+    left: 0;
+}
+
+.right-roller {
+    right: 0;
+}
+
+.support {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background-color: #666;
+    bottom: -15px;
+    left: 0;
+}
+
+/* Z型提升机样式 */
+.z-elevator {
+    transform-style: preserve-3d;
+}
+
+.z-elevator .support {
+    position: absolute;
+    width: 20px;
+    height: 250px;
+    background-color: #555;
+    left: 30px;
+    bottom: 0;
+}
+
+.z-elevator .vertical-part {
+    position: absolute;
+    width: 40px;
+    height: 200px;
+    background-color: #666;
+    left: 20px;
+    bottom: 0;
+    transform: translateZ(10px);
+}
+
+.z-elevator .horizontal-part {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    background-color: #666;
+    left: -20px;
+    top: 10px;
+    transform: translateZ(10px);
+}
+
+.z-elevator .top-part {
+    position: absolute;
+    width: 40px;
+    height: 100px;
+    background-color: #666;
+    left: -20px;
+    top: -90px;
+    transform: translateZ(10px);
+}
+
+.z-elevator .bucket {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: #999;
+    left: 25px;
+    opacity: 0;
+}
+
+.running .z-elevator .bucket {
+    opacity: 1;
+    animation: z-elevator-animation 4s infinite linear;
+}
+
+/* Z型提升机新样式 */
+.z-elevator-3d {
+    transform-style: preserve-3d;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* 机身外壳 - Z形路径 */
+.z-elevator-3d .casing {
+    transform-style: preserve-3d;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/* 底部水平段 */
+.z-elevator-3d .bottom-section {
+    position: absolute;
+    width: 60px;
+    height: 40px;
+    background-color: #a0a0a0;
+    bottom: 0;
+    left: 10px;
+    transform: translateZ(0);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 中间垂直段 */
+.z-elevator-3d .vertical-section {
+    position: absolute;
+    width: 60px;
+    height: 200px;
+    background-color: #a8a8a8;
+    bottom: 40px;
+    left: 10px;
+    transform: translateZ(0);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 顶部水平段 */
+.z-elevator-3d .top-section {
+    position: absolute;
+    width: 60px;
+    height: 40px;
+    background-color: #a0a0a0;
+    top: 20px;
+    left: 10px;
+    transform: translateZ(0);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 料斗链条系统 */
+.z-elevator-3d .chain-system {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+/* 链条轨道 */
+.z-elevator-3d .chain-track {
+    position: absolute;
+    width: 10px;
+    height: 280px;
+    background-color: rgba(100, 100, 100, 0.3);
+    left: 35px;
+    bottom: 0;
+    transform: translateZ(5px);
+}
+
+/* 顶部链轮 */
+.z-elevator-3d .top-sprocket {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #5a5a5a;
+    top: 25px;
+    left: 25px;
+    transform: translateZ(15px) rotateX(90deg);
+    border: 3px solid #444;
+}
+
+/* 底部链轮 */
+.z-elevator-3d .bottom-sprocket {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #5a5a5a;
+    bottom: 5px;
+    left: 25px;
+    transform: translateZ(15px) rotateX(90deg);
+    border: 3px solid #444;
+}
+
+/* 电机系统 */
+.z-elevator-3d .motor {
+    position: absolute;
+    width: 40px;
+    height: 30px;
+    background-color: #333;
+    top: 10px;
+    left: 0;
+    transform: translateZ(20px);
+    border-radius: 5px;
+}
+
+/* 料斗容器 */
+.z-elevator-3d .buckets-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    opacity: 0;
+}
+
+/* 料斗动画 */
+.running .z-elevator-3d .buckets-container {
+    opacity: 1;
+    animation: buckets-movement 8s infinite linear;
+}
+
+/* 进料口 */
+.z-elevator-3d .input-port {
+    position: absolute;
+    width: 40px;
+    height: 20px;
+    background-color: #777;
+    bottom: 30px;
+    left: 0;
+    transform: translateZ(10px) rotateZ(-30deg);
+    transform-origin: right bottom;
+}
+
+/* 出料口 */
+.z-elevator-3d .output-port {
+    position: absolute;
+    width: 40px;
+    height: 15px;
+    background-color: #777;
+    top: 25px;
+    left: 70px;
+    transform: translateZ(10px) rotateZ(-15deg);
+    transform-origin: left top;
+}
+
+/* 进料物料 */
+.z-elevator-3d .input-material {
+    position: absolute;
+    width: 25px;
+    height: 10px;
+    background-color: #dcb257;
+    bottom: 35px;
+    left: 10px;
+    transform: translateZ(15px);
+    opacity: 0;
+}
+
+/* 出料物料 */
+.z-elevator-3d .output-material {
+    position: absolute;
+    width: 25px;
+    height: 10px;
+    background-color: #dcb257;
+    top: 30px;
+    left: 70px;
+    transform: translateZ(15px);
+    opacity: 0;
+}
+
+/* 运行时物料动画 */
+.running .z-elevator-3d .input-material {
+    opacity: 0.8;
+    animation: input-material-flow 4s infinite;
+}
+
+.running .z-elevator-3d .output-material {
+    opacity: 0.8;
+    animation: output-material-flow 4s infinite 2s;
+}
+
+/* 链条细节 */
+.z-elevator-3d .chain-detail {
+    position: absolute;
+    width: 12px;
+    height: 280px;
+    left: 34px;
+    bottom: 0;
+    transform: translateZ(10px);
+    background: linear-gradient(0deg, 
+        rgba(100, 100, 100, 0.8) 0%, 
+        rgba(100, 100, 100, 0.8) 5px,
+        rgba(120, 120, 120, 0.8) 5px, 
+        rgba(120, 120, 120, 0.8) 10px);
+    background-size: 10px 20px;
+    opacity: 0;
+}
+
+.running .z-elevator-3d .chain-detail {
+    opacity: 1;
+    animation: chain-movement 4s infinite linear;
+}
+
+/* 料斗动画 */
+@keyframes buckets-movement {
+    0% {
+        background: radial-gradient(circle at 35px 10px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 60px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 110px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 160px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 210px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 260px, #999 5px, transparent 5px);
+    }
+    25% {
+        background: radial-gradient(circle at 35px 35px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 85px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 135px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 185px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 235px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 10px, #999 5px, transparent 5px);
+    }
+    50% {
+        background: radial-gradient(circle at 35px 60px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 110px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 160px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 210px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 260px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 35px, #999 5px, transparent 5px);
+    }
+    75% {
+        background: radial-gradient(circle at 35px 85px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 135px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 185px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 235px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 10px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 60px, #999 5px, transparent 5px);
+    }
+    100% {
+        background: radial-gradient(circle at 35px 10px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 60px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 110px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 160px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 210px, #999 5px, transparent 5px),
+                   radial-gradient(circle at 35px 260px, #999 5px, transparent 5px);
+    }
+}
+
+@keyframes chain-movement {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 -40px;
+    }
+}
+
+@keyframes input-material-flow {
+    0% {
+        opacity: 0;
+        transform: translateZ(15px) translateX(0);
+    }
+    20% {
+        opacity: 0.8;
+        transform: translateZ(15px) translateX(10px);
+    }
+    80% {
+        opacity: 0.8;
+        transform: translateZ(15px) translateX(20px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateZ(15px) translateX(30px);
+    }
+}
+
+@keyframes output-material-flow {
+    0% {
+        opacity: 0;
+        transform: translateZ(15px) translateX(0);
+    }
+    20% {
+        opacity: 0.8;
+        transform: translateZ(15px) translateX(10px);
+    }
+    80% {
+        opacity: 0.8;
+        transform: translateZ(15px) translateX(30px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateZ(15px) translateX(40px);
+    }
+}
+
+/* 分批筒样式 */
+.batch-separator {
+    transform-style: preserve-3d;
+}
+
+.batch-separator .top-cylinder {
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    background-color: #8e8e8e;
+    border-radius: 50px 50px 0 0;
+    top: 0;
+    left: 10px;
+    transform: rotateX(90deg) translateZ(-25px);
+}
+
+.batch-separator .middle-funnel {
+    position: absolute;
+    width: 80px;
+    height: 70px;
+    background-color: #777;
+    border-radius: 0 0 40px 40px;
+    top: 50px;
+    left: 20px;
+    transform: translateZ(0);
+}
+
+.batch-separator .bottom-output {
+    position: absolute;
+    width: 40px;
+    height: 30px;
+    background-color: #666;
+    bottom: 0;
+    left: 40px;
+    transform: translateZ(0);
+}
+
+.batch-separator .material-particles {
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    top: 70px;
+    left: 30px;
+    transform: translateZ(10px);
+    opacity: 0;
+}
+
+.running .batch-separator .material-particles {
+    opacity: 1;
+    animation: particles-animation 2s infinite;
+    background: radial-gradient(circle, rgba(220, 178, 87, 0.7) 0%, rgba(220, 178, 87, 0) 70%);
+}
+
+/* 新的分批筒 - 液压缸风格 */
+.batch-cylinder {
+    transform-style: preserve-3d;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* 筒体 - 碳钢材质 */
+.batch-cylinder .cylinder-body {
+    position: absolute;
+    width: 200px;
+    height: 50px;
+    background-color: #566573;
+    border-radius: 25px;
+    top: 50px;
+    left: 10px;
+    transform: translateZ(0);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    background-image: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.2) 20%, 
+        rgba(255, 255, 255, 0.1) 40%, 
+        rgba(0, 0, 0, 0.1) 60%, 
+        rgba(0, 0, 0, 0.2) 80%, 
+        rgba(0, 0, 0, 0.1) 100%);
+}
+
+/* 铰链安装点 */
+.batch-cylinder .hinge-mount {
+    position: absolute;
+    width: 20px;
+    height: 70px;
+    background-color: #34495e;
+    border-radius: 5px;
+    top: 40px;
+    left: 10px;
+    transform: translateZ(10px);
+}
+
+/* 杆 - 铬镀层钢 */
+.batch-cylinder .piston-rod {
+    position: absolute;
+    width: 150px;
+    height: 30px;
+    background-color: #d7dbdd;
+    border-radius: 15px;
+    top: 60px;
+    left: 60px;
+    transform: translateZ(5px);
+    background-image: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.8) 0%, 
+        rgba(255, 255, 255, 0.9) 40%, 
+        rgba(200, 200, 200, 0.8) 60%, 
+        rgba(200, 200, 200, 0.7) 100%);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    transform-origin: left center;
+}
+
+/* 端口 SAE 4 */
+.batch-cylinder .port {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: #7f8c8d;
+    border-radius: 50%;
+    top: 42px;
+    left: 30px;
+    transform: translateZ(15px);
+    border: 2px solid #34495e;
+}
+
+/* 端口连接管 */
+.batch-cylinder .port-connection {
+    position: absolute;
+    width: 30px;
+    height: 10px;
+    background-color: #7f8c8d;
+    top: 45px;
+    left: 45px;
+    transform: translateZ(15px) rotateZ(-30deg);
+    transform-origin: left center;
+}
+
+/* 活塞端 */
+.batch-cylinder .piston-end {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: #566573;
+    border-radius: 5px;
+    top: 55px;
+    left: 210px;
+    transform: translateZ(5px);
+    transition: left 4s ease-in-out;
+}
+
+/* 连接铰链 */
+.batch-cylinder .connecting-hinge {
+    position: absolute;
+    width: 15px;
+    height: 40px;
+    background-color: #34495e;
+    border-radius: 5px;
+    top: 55px;
+    left: 250px;
+    transform: translateZ(10px);
+    transition: left 4s ease-in-out;
+}
+
+/* 支撑结构 */
+.batch-cylinder .support-structure {
+    position: absolute;
+    width: 30px;
+    height: 80px;
+    background-color: #7f8c8d;
+    border-radius: 5px 5px 0 0;
+    top: 95px;
+    left: 250px;
+    transform: translateZ(0);
+    transition: left 4s ease-in-out;
+}
+
+/* 物料容器 */
+.batch-cylinder .material-container {
+    position: absolute;
+    width: 80px;
+    height: 60px;
+    background-color: #85929e;
+    border-radius: 10px;
+    top: 20px;
+    left: 210px;
+    transform: translateZ(15px);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: left 4s ease-in-out;
+}
+
+/* 物料 */
+.batch-cylinder .material {
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    background-color: rgba(220, 178, 87, 0.7);
+    border-radius: 5px;
+    top: 35px;
+    left: 220px;
+    transform: translateZ(20px);
+    opacity: 0;
+    transition: left 4s ease-in-out;
+}
+
+/* 运行中的液压缸动画 */
+.running .batch-cylinder .piston-rod {
+    animation: piston-movement 8s infinite ease-in-out;
+}
+
+.running .batch-cylinder .piston-end {
+    animation: end-movement 8s infinite ease-in-out;
+}
+
+.running .batch-cylinder .connecting-hinge {
+    animation: hinge-movement 8s infinite ease-in-out;
+}
+
+.running .batch-cylinder .support-structure {
+    animation: support-movement 8s infinite ease-in-out;
+}
+
+.running .batch-cylinder .material-container {
+    animation: container-movement 8s infinite ease-in-out;
+}
+
+.running .batch-cylinder .material {
+    opacity: 1;
+    animation: material-movement 8s infinite ease-in-out;
+}
+
+@keyframes piston-movement {
+    0%, 100% {
+        width: 150px;
+        left: 60px;
+    }
+    50% {
+        width: 350px;
+        left: 60px;
+    }
+}
+
+@keyframes end-movement {
+    0%, 100% {
+        left: 210px;
+    }
+    50% {
+        left: 410px;
+    }
+}
+
+@keyframes hinge-movement {
+    0%, 100% {
+        left: 250px;
+    }
+    50% {
+        left: 450px;
+    }
+}
+
+@keyframes support-movement {
+    0%, 100% {
+        left: 250px;
+    }
+    50% {
+        left: 450px;
+    }
+}
+
+@keyframes container-movement {
+    0%, 100% {
+        left: 210px;
+    }
+    50% {
+        left: 410px;
+    }
+}
+
+@keyframes material-movement {
+    0%, 100% {
+        left: 220px;
+        opacity: 0.7;
+    }
+    25% {
+        opacity: 1;
+    }
+    50% {
+        left: 420px;
+        opacity: 0.7;
+    }
+    75% {
+        opacity: 1;
+    }
+}
+
+/* 皮带输送机样式 */
+.conveyor-20m, .conveyor-14m {
+    transform-style: preserve-3d;
+}
+
+.conveyor-20m .belt-container, .conveyor-14m .belt-container {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    top: 20px;
+    transform-style: preserve-3d;
+}
+
+.conveyor-20m .belt, .conveyor-14m .belt {
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    transform: translateZ(0);
+}
+
+.conveyor-20m .left-support, .conveyor-14m .left-support {
+    position: absolute;
+    width: 20px;
+    height: 40px;
+    background-color: #555;
+    bottom: -20px;
+    left: 20px;
+}
+
+.conveyor-20m .right-support, .conveyor-14m .right-support {
+    position: absolute;
+    width: 20px;
+    height: 40px;
+    background-color: #555;
+    bottom: -20px;
+    right: 20px;
+}
+
+.conveyor-20m .material-flow, .conveyor-14m .material-flow {
+    position: absolute;
+    width: 80%;
+    height: 10px;
+    background-color: rgba(220, 178, 87, 0.5);
+    top: 15px;
+    left: 10%;
+    transform: translateZ(1px);
+    opacity: 0;
+}
+
+.running .conveyor-20m .material-flow, .running .conveyor-14m .material-flow {
+    opacity: 1;
+    animation: conveyor-flow 4s infinite linear;
+}
+
+/* 包膜机样式 */
+.coating-machine {
+    transform-style: preserve-3d;
+}
+
+.coating-machine .chamber {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background-color: #5d8aa8;
+    border-radius: 60px;
+    top: 10px;
+    left: 10px;
+    transform: rotateX(90deg) translateZ(-60px);
+}
+
+.coating-machine .spray-system {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 8px solid #777;
+    border-radius: 50%;
+    top: 30px;
+    left: 30px;
+    transform: translateZ(20px);
+}
+
+.coating-machine .mixer {
+    position: absolute;
+    width: 60px;
+    height: 10px;
+    background-color: #999;
+    top: 70px;
+    left: 40px;
+    transform: translateZ(20px);
+    transform-origin: center;
+}
+
+.running .coating-machine .mixer {
+    animation: mixer-rotate 1s infinite linear;
+}
+
+.coating-machine .material {
+    position: absolute;
+    width: 80px;
+    height: 20px;
+    background-color: rgba(220, 178, 87, 0.6);
+    border-radius: 40px;
+    top: 100px;
+    left: 30px;
+    transform: translateZ(10px);
+}
+
+.coating-machine .coating-mist {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(100, 149, 237, 0.5) 0%, rgba(100, 149, 237, 0) 70%);
+    top: 20px;
+    left: 20px;
+    border-radius: 50%;
+    opacity: 0;
+    transform: translateZ(30px);
+}
+
+.running .coating-machine .coating-mist {
+    opacity: 1;
+    animation: mist-animation 2s infinite;
+}
+
+/* 新的2.44米软包膜剂包膜机样式 */
+.coating-machine-3d {
+    transform-style: preserve-3d;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    perspective: 1000px;
+}
+
+/* 机器主体结构 */
+.coating-machine-3d .machine-frame {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background-color: #7f8c8d;
+    bottom: 0;
+    left: 0;
+    transform: translateZ(0);
+    transform-style: preserve-3d;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 主涂层盘 - 2.44米 */
+.coating-machine-3d .coating-pan {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background-color: #95a5a6;
+    border-radius: 60px;
+    top: 20px;
+    left: 10px;
+    transform: rotateX(70deg) translateZ(0);
+    transform-style: preserve-3d;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/* 涂层盘内部 */
+.coating-machine-3d .pan-interior {
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    background-color: #7f8c8d;
+    border-radius: 55px;
+    top: 5px;
+    left: 5px;
+    transform: translateZ(1px);
+    overflow: hidden;
+    background-image: 
+        radial-gradient(circle at center, 
+            rgba(255, 255, 255, 0.1) 0%, 
+            rgba(255, 255, 255, 0.05) 50%, 
+            transparent 70%);
+}
+
+/* 涂层盘入料槽 */
+.coating-machine-3d .pan-inlet {
+    position: absolute;
+    width: 40px;
+    height: 20px;
+    background-color: #95a5a6;
+    top: 0;
+    left: 40px;
+    transform: translateZ(5px) rotateX(-30deg);
+    border-radius: 5px;
+}
+
+/* 涂层盘出料槽 */
+.coating-machine-3d .pan-outlet {
+    position: absolute;
+    width: 40px;
+    height: 20px;
+    background-color: #95a5a6;
+    bottom: 20px;
+    right: 20px;
+    transform: translateZ(5px) rotateX(30deg);
+    border-radius: 5px;
+}
+
+/* 输送带系统 */
+.coating-machine-3d .conveyor-system {
+    position: absolute;
+    width: 160px;
+    height: 20px;
+    bottom: 30px;
+    left: -10px;
+    transform-style: preserve-3d;
+}
+
+/* 进料输送带 */
+.coating-machine-3d .inlet-conveyor {
+    position: absolute;
+    width: 50px;
+    height: 10px;
+    background-color: #34495e;
+    top: 5px;
+    left: 0;
+    transform: translateZ(10px);
+}
+
+/* 出料输送带 */
+.coating-machine-3d .outlet-conveyor {
+    position: absolute;
+    width: 50px;
+    height: 10px;
+    background-color: #34495e;
+    top: 5px;
+    right: 0;
+    transform: translateZ(10px);
+}
+
+/* 喷涂系统 */
+.coating-machine-3d .spray-system-3d {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+/* 喷嘴支架 */
+.coating-machine-3d .spray-arm {
+    position: absolute;
+    width: 80px;
+    height: 10px;
+    background-color: #7f8c8d;
+    top: 30px;
+    left: 30px;
+    transform: translateZ(60px) rotateZ(45deg);
+}
+
+/* 喷嘴1 */
+.coating-machine-3d .spray-nozzle-1 {
+    position: absolute;
+    width: 8px;
+    height: 15px;
+    background-color: #34495e;
+    top: 40px;
+    left: 40px;
+    transform: translateZ(65px);
+    border-radius: 4px;
+}
+
+/* 喷嘴2 */
+.coating-machine-3d .spray-nozzle-2 {
+    position: absolute;
+    width: 8px;
+    height: 15px;
+    background-color: #34495e;
+    top: 40px;
+    left: 90px;
+    transform: translateZ(65px);
+    border-radius: 4px;
+}
+
+/* 喷涂雾化效果 */
+.coating-machine-3d .spray-mist-1 {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle, rgba(100, 149, 237, 0.5) 0%, rgba(100, 149, 237, 0) 70%);
+    top: 50px;
+    left: 30px;
+    border-radius: 50%;
+    opacity: 0;
+    transform: translateZ(50px);
+}
+
+.coating-machine-3d .spray-mist-2 {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: radial-gradient(circle, rgba(100, 149, 237, 0.5) 0%, rgba(100, 149, 237, 0) 70%);
+    top: 50px;
+    left: 80px;
+    border-radius: 50%;
+    opacity: 0;
+    transform: translateZ(50px);
+}
+
+/* 控制面板 */
+.coating-machine-3d .control-panel {
+    position: absolute;
+    width: 30px;
+    height: 40px;
+    background-color: #2c3e50;
+    top: 70px;
+    right: 10px;
+    transform: translateZ(20px);
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* 控制面板屏幕 */
+.coating-machine-3d .panel-screen {
+    position: absolute;
+    width: 20px;
+    height: 15px;
+    background-color: #2ecc71;
+    top: 5px;
+    left: 5px;
+    transform: translateZ(1px);
+    border-radius: 2px;
+}
+
+/* 控制面板按钮 */
+.coating-machine-3d .panel-buttons {
+    position: absolute;
+    width: 20px;
+    height: 15px;
+    top: 25px;
+    left: 5px;
+    transform: translateZ(1px);
+    background-image: 
+        radial-gradient(circle at 25% 25%, #e74c3c 2px, transparent 3px),
+        radial-gradient(circle at 75% 25%, #f1c40f 2px, transparent 3px),
+        radial-gradient(circle at 25% 75%, #3498db 2px, transparent 3px),
+        radial-gradient(circle at 75% 75%, #2ecc71 2px, transparent 3px);
+}
+
+/* 驱动电机 */
+.coating-machine-3d .drive-motor {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: #34495e;
+    bottom: 10px;
+    left: 55px;
+    transform: translateZ(20px);
+    border-radius: 5px;
+}
+
+/* 物料 */
+.coating-machine-3d .material-3d {
+    position: absolute;
+    width: 70px;
+    height: 20px;
+    background-color: rgba(220, 178, 87, 0.7);
+    border-radius: 35px;
+    top: 60px;
+    left: 25px;
+    transform: translateZ(30px) rotateX(70deg);
+    opacity: 0.7;
+}
+
+/* 物料颗粒 */
+.coating-machine-3d .material-particles {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    top: 15px;
+    left: 15px;
+    transform: translateZ(15px) rotateX(70deg);
+    opacity: 0;
+}
+
+/* 运行动画 */
+/* 涂层盘旋转 */
+.running .coating-machine-3d .pan-interior {
+    animation: pan-rotation 5s infinite linear;
+}
+
+/* 物料搅拌 */
+.running .coating-machine-3d .material-particles {
+    opacity: 1;
+    animation: particles-mixing 8s infinite linear;
+}
+
+/* 喷涂雾化 */
+.running .coating-machine-3d .spray-mist-1 {
+    opacity: 1;
+    animation: spray-pulsing 3s infinite alternate;
+}
+
+.running .coating-machine-3d .spray-mist-2 {
+    opacity: 1;
+    animation: spray-pulsing 2.5s infinite alternate-reverse;
+}
+
+/* 进料输送带 */
+.running .coating-machine-3d .inlet-conveyor {
+    background: repeating-linear-gradient(
+        90deg,
+        #34495e,
+        #34495e 5px,
+        #2c3e50 5px,
+        #2c3e50 10px
+    );
+    animation: conveyor-movement 3s infinite linear;
+}
+
+/* 出料输送带 */
+.running .coating-machine-3d .outlet-conveyor {
+    background: repeating-linear-gradient(
+        90deg,
+        #34495e,
+        #34495e 5px,
+        #2c3e50 5px,
+        #2c3e50 10px
+    );
+    animation: conveyor-movement 3s infinite linear;
+}
+
+/* 控制面板灯闪烁 */
+.running .coating-machine-3d .panel-screen {
+    animation: screen-blink 1s infinite;
+}
+
+/* 动画关键帧 */
+@keyframes pan-rotation {
+    0% {
+        background-image: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+    }
+    25% {
+        background-image: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+    }
+    50% {
+        background-image: radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+    }
+    75% {
+        background-image: radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+    }
+    100% {
+        background-image: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+    }
+}
+
+@keyframes particles-mixing {
+    0% {
+        background: radial-gradient(circle at 25% 25%, rgba(220, 178, 87, 0.7) 0%, rgba(220, 178, 87, 0) 40%);
+    }
+    25% {
+        background: radial-gradient(circle at 75% 25%, rgba(220, 178, 87, 0.7) 0%, rgba(220, 178, 87, 0) 40%);
+    }
+    50% {
+        background: radial-gradient(circle at 75% 75%, rgba(220, 178, 87, 0.7) 0%, rgba(220, 178, 87, 0) 40%);
+    }
+    75% {
+        background: radial-gradient(circle at 25% 75%, rgba(220, 178, 87, 0.7) 0%, rgba(220, 178, 87, 0) 40%);
+    }
+    100% {
+        background: radial-gradient(circle at 25% 25%, rgba(220, 178, 87, 0.7) 0%, rgba(220, 178, 87, 0) 40%);
+    }
+}
+
+@keyframes spray-pulsing {
+    0% {
+        opacity: 0.3;
+        transform: translateZ(50px) scale(0.8);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translateZ(50px) scale(1.2);
+    }
+    100% {
+        opacity: 0.3;
+        transform: translateZ(50px) scale(1);
+    }
+}
+
+@keyframes conveyor-movement {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 30px 0;
+    }
+}
+
+@keyframes screen-blink {
+    0%, 100% {
+        background-color: #2ecc71;
+    }
+    50% {
+        background-color: #27ae60;
+    }
+}
+
+/* 大提升运送装置样式 */
+.big-elevator {
+    transform-style: preserve-3d;
+}
+
+.big-elevator .tower {
+    position: absolute;
+    width: 50px;
+    height: 300px;
+    background-color: #777;
+    left: 25px;
+    bottom: 0;
+    transform: translateZ(0);
+}
+
+.big-elevator .belt {
+    position: absolute;
+    width: 10px;
+    height: 280px;
+    background-color: #333;
+    left: 45px;
+    bottom: 10px;
+    transform: translateZ(10px);
+}
+
+.big-elevator .buckets {
+    position: absolute;
+    width: 20px;
+    height: 280px;
+    left: 40px;
+    bottom: 10px;
+    transform: translateZ(15px);
+    opacity: 0;
+}
+
+.running .big-elevator .buckets {
+    opacity: 1;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 25px,
+        #ccc 25px,
+        #ccc 35px
+    );
+    animation: bucket-move 4s infinite linear;
+}
+
+/* 冷却塔样式 */
+.cooling-tower {
+    transform-style: preserve-3d;
+}
+
+.cooling-tower .tower-body {
+    position: absolute;
+    width: 100px;
+    height: 150px;
+    background-color: #607d8b;
+    border-radius: 10px;
+    left: 10px;
+    bottom: 0;
+    transform: translateZ(0);
+}
+
+.cooling-tower .tower-top {
+    position: absolute;
+    width: 120px;
+    height: 20px;
+    background-color: #455a64;
+    border-radius: 5px;
+    left: 0;
+    top: 0;
+    transform: translateZ(0);
+}
+
+.cooling-tower .cooling-fins {
+    position: absolute;
+    width: 80px;
+    height: 100px;
+    left: 20px;
+    top: 30px;
+    transform: translateZ(10px);
+    background: repeating-linear-gradient(
+        90deg,
+        #90a4ae,
+        #90a4ae 5px,
+        #607d8b 5px,
+        #607d8b 10px
+    );
+}
+
+.cooling-tower .air-flow {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+    top: 40px;
+    left: 20px;
+    opacity: 0;
+    transform: translateZ(20px);
+}
+
+.running .cooling-tower .air-flow {
+    opacity: 1;
+    animation: air-flow-animation 3s infinite;
+}
+
+/* 包装机样式 */
+.packaging-machine {
+    transform-style: preserve-3d;
+}
+
+.packaging-machine .frame {
+    position: absolute;
+    width: 140px;
+    height: 100px;
+    background-color: #5d4037;
+    border-radius: 5px;
+    left: 10px;
+    bottom: 0;
+    transform: translateZ(0);
+}
+
+.packaging-machine .hopper {
+    position: absolute;
+    width: 60px;
+    height: 40px;
+    background-color: #8d6e63;
+    left: 50px;
+    top: 10px;
+    transform: translateZ(10px);
+    border-radius: 5px 5px 0 0;
+}
+
+.packaging-machine .packaging-system {
+    position: absolute;
+    width: 80px;
+    height: 30px;
+    background-color: #757575;
+    left: 40px;
+    top: 50px;
+    transform: translateZ(10px);
+}
+
+.packaging-machine .output-conveyor {
+    position: absolute;
+    width: 60px;
+    height: 10px;
+    background-color: #616161;
+    left: 50px;
+    bottom: 10px;
+    transform: translateZ(10px);
+}
+
+.packaging-machine .package {
+    position: absolute;
+    width: 30px;
+    height: 20px;
+    background-color: #a1887f;
+    left: 65px;
+    bottom: 20px;
+    transform: translateZ(15px);
+    opacity: 0;
+}
+
+.running .packaging-machine .package {
+    opacity: 1;
+    animation: package-animation 3s infinite;
+}
+
+/* 参数面板样式 */
+
+.parameter-panel ul {
+    list-style-type: none;
+    margin-left: 10px;
+    column-count: 2;  /* 分成两列显示参数 */
+    column-gap: var(--space-md);
+}
+
+.parameter-panel ul ul {
+    margin-left: 20px;
+    margin-top: 5px;
+    column-count: 1;  /* 子列表不分列 */
+}
+
+.parameter-panel li {
+    margin-bottom: var(--space-xs);
+    line-height: 1.5;
+    break-inside: avoid; /* 防止列表项被分割 */
+}
+
+h2 {
+    color: var(--bright-yellow);
+    margin-bottom: var(--space-md);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    border-bottom: 2px solid rgba(255, 219, 0, 0.3);
+    padding-bottom: var(--space-xs);
+}
+
+#equipment-info {
+    color: var(--white);
+    height: 350px;
+    overflow-y: auto;
+    line-height: 1.7;
+    padding-right: var(--space-sm);
+}
+
+#equipment-info::-webkit-scrollbar {
+    width: 6px;
+}
+
+#equipment-info::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+#equipment-info::-webkit-scrollbar-thumb {
+    background: var(--bright-yellow);
+    border-radius: 3px;
+}
+
+#equipment-info strong {
+    color: var(--bright-yellow);
+    font-size: 18px;
+    display: block;
+    margin-bottom: var(--space-xs);
+}
+
+#equipment-info span {
+    color: var(--bright-yellow);
+    font-weight: 600;
+}
+
+/* 动画定义 */
+@keyframes material-flow {
+    0% {
+        transform: translateY(0) translateX(25px) translateZ(5px);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(20px) translateX(25px) translateZ(5px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(40px) translateX(25px) translateZ(5px);
+        opacity: 0;
+    }
+}
+
+@keyframes belt-move {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 40px 0;
+    }
+}
+
+@keyframes z-elevator-animation {
+    0% {
+        bottom: 0;
+        left: 25px;
+    }
+    25% {
+        bottom: 200px;
+        left: 25px;
+    }
+    50% {
+        bottom: 200px;
+        left: -15px;
+    }
+    75% {
+        bottom: 100px;
+        left: -15px;
+    }
+    100% {
+        bottom: 0;
+        left: 25px;
+    }
+}
+
+@keyframes particles-animation {
+    0% {
+        opacity: 0.2;
+        transform: translateZ(10px) scale(0.8);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translateZ(10px) scale(1.1);
+    }
+    100% {
+        opacity: 0.2;
+        transform: translateZ(10px) scale(0.8);
+    }
+}
+
+@keyframes conveyor-flow {
+    0% {
+        transform: translateZ(1px) translateX(0);
+    }
+    100% {
+        transform: translateZ(1px) translateX(100%);
+    }
+}
+
+@keyframes mixer-rotate {
+    0% {
+        transform: translateZ(20px) rotate(0deg);
+    }
+    100% {
+        transform: translateZ(20px) rotate(360deg);
+    }
+}
+
+@keyframes mist-animation {
+    0% {
+        opacity: 0.3;
+        transform: translateZ(30px) scale(0.8);
+    }
+    50% {
+        opacity: 0.6;
+        transform: translateZ(30px) scale(1.1);
+    }
+    100% {
+        opacity: 0.3;
+        transform: translateZ(30px) scale(0.8);
+    }
+}
+
+@keyframes bucket-move {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 -100px;
+    }
+}
+
+@keyframes air-flow-animation {
+    0% {
+        opacity: 0.3;
+        transform: translateZ(20px) scale(0.9) translateY(0);
+    }
+    50% {
+        opacity: 0.6;
+        transform: translateZ(20px) scale(1.1) translateY(-10px);
+    }
+    100% {
+        opacity: 0.3;
+        transform: translateZ(20px) scale(0.9) translateY(-20px);
+    }
+}
+
+@keyframes package-animation {
+    0% {
+        transform: translateZ(15px) translateX(0);
+        opacity: 1;
+    }
+    80% {
+        transform: translateZ(15px) translateX(60px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateZ(15px) translateX(60px);
+        opacity: 0;
+    }
+}
+
+@keyframes vibration {
+    0% {
+        transform: translateX(-0.5px) translateY(0);
+    }
+    100% {
+        transform: translateX(0.5px) translateY(-0.5px);
+    }
+}
+
+/* 媒体查询 - 对小屏幕的适配 */
+@media (max-width: 1920px) {
+    .panoramic-container {
+        width: 100%;
+        height: auto;
+    }
+    
+    .controls {
+        flex-wrap: wrap;
+    }
+    
+    .title {
+        font-size: 28px;
+    }
+}
+
+/* 监控面板样式 */
+.monitor-panel {
+    background-color: rgba(0, 26, 92, 0.7);
+    max-height: none;
+    overflow-y: auto;
+}
+
+/* 监控面板网格样式已移动到主布局部分 */
+
+.monitor-item {
+    background-color: rgba(0, 47, 167, 0.3);
+    border-radius: 6px;
+    padding: var(--space-sm);
+    border: 1px solid rgba(222, 226, 230, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    transition: all var(--transition-normal);
+}
+
+.monitor-item:hover {
+    box-shadow: 0 0 15px rgba(255, 219, 0, 0.3);
+    transform: translateY(-3px);
+}
+
+.item-label {
+    font-weight: 600;
+    color: var(--bright-yellow);
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.status-indicator {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.status-indicator.running {
+    background-color: rgba(76, 175, 80, 0.8);
+    color: white;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.status-indicator.stopped {
+    background-color: rgba(244, 67, 54, 0.8);
+    color: white;
+}
+
+.status-indicator.fault {
+    background-color: rgba(255, 152, 0, 0.8);
+    color: black;
+    animation: pulse 1.5s infinite;
+}
+
+.parameter-control {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.parameter-control label {
+    margin-bottom: 2px;
+    color: var(--gray-300);
+}
+
+.parameter-slider {
+    width: 100%;
+    height: 5px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
+    border-radius: 3px;
+    margin: 5px 0;
+}
+
+.parameter-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--bright-yellow);
+    cursor: pointer;
+}
+
+.parameter-value {
+    font-weight: 600;
+    text-align: right;
+    color: var(--light-blue);
+}
+
+/* 故障模拟面板样式 */
+.fault-panel {
+    background-color: rgba(0, 26, 92, 0.7);
+}
+
+.fault-controls {
+    display: flex;
+    flex-wrap: nowrap;  /* 水平排列不换行 */
+    gap: var(--space-md);
+    margin-bottom: var(--space-sm);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fault-control-item {
+    display: flex;
+    flex-direction: row;  /* 改为水平排列 */
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+.fault-control-item label {
+    font-size: 14px;
+    color: var(--gray-300);
+    white-space: nowrap;
+}
+
+.fault-control-item select {
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--gray-600);
+    background-color: rgba(0, 47, 167, 0.3);
+    color: var(--white);
+    font-size: 14px;
+    min-width: 150px;
+}
+
+.fault-button {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    height: 36px;
+}
+
+#trigger-fault {
+    background-color: #ff9800;
+    color: var(--black);
+}
+
+#trigger-fault:hover {
+    background-color: #f57c00;
+}
+
+#reset-fault {
+    background-color: var(--gray-600);
+    color: var(--white);
+}
+
+#reset-fault:hover {
+    background-color: var(--gray-800);
+}
+
+.fault-status {
+    background-color: rgba(0, 47, 167, 0.3);
+    padding: var(--space-sm);
+    border-radius: 6px;
+    margin-top: var(--space-sm);
+    text-align: center;
+    font-weight: 600;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.fault-status.active {
+    background-color: rgba(255, 152, 0, 0.3);
+    color: #ffdb00;
+    animation: fault-pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* 故障状态样式 */
+.equipment.fault {
+    animation: fault-shake 0.5s infinite;
+    box-shadow: 0 0 20px rgba(255, 152, 0, 0.7) !important;
+    z-index: 10;
+}
+
+.equipment.fault .status {
+    color: #ff9800;
+    font-weight: bold;
+    animation: pulse 1s infinite;
+}
+
+/* 不同故障类型的特殊效果 */
+.equipment.fault-overload .model {
+    filter: brightness(1.3) sepia(0.3);
+}
+
+.equipment.fault-jam .model {
+    filter: brightness(0.8) saturate(1.5);
+}
+
+.equipment.fault-motor-failure .model {
+    filter: hue-rotate(30deg) brightness(0.9);
+}
+
+.equipment.fault-sensor-error .model {
+    filter: contrast(1.2) brightness(1.1);
+}
+
+.equipment.fault-power-loss .model {
+    filter: grayscale(0.8) brightness(0.7);
+}
+
+@keyframes fault-shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-2px);
+    }
+    75% {
+        transform: translateX(2px);
+    }
+}
+
+@keyframes fault-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 152, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 152, 0, 0);
+    }
+}
+
+/* 响应式调整 */
+@media (max-width: 1600px) {
+    .monitor-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1200px) {
+    .monitor-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 新的主布局样式 - 适配1920*1080分辨率 */
+.main-layout {
+    display: flex;
+    width: 100%;
+    /* 增加高度以适应向下移动10cm后的产线 */
+    height: 800px;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+    position: relative; /* 确保定位上下文正确 */
+    /* 移除margin-top，使其紧贴控制按钮 */
+}
+
+/* 侧面板共同样式 */
+.side-panel {
+    width: 320px; /* 适当增加侧面板宽度 */
+    height: 100%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md); /* 添加间距 */
+}
+
+/* 中央面板 */
+.center-panel {
+    flex: 1;
+    height: 100%;
+    min-height: 600px; /* 确保有足够的高度显示产线 */
+    position: relative;
+    /* 添加轻微的阴影突出中央产线区域 */
+    box-shadow: var(--shadow-md);
+    border-radius: 10px;
+    overflow: visible; /* 修改为visible，避免3D内容被截断 */
+}
+
+/* Three.js渲染容器 - 作为背景层和主要定位基准 */
+#threejs-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* 背景层 */
+}
+
+/* 生产线3D场景样式优化 */
+.production-line-3d {
+    position: absolute; /* 绝对定位 */
+    top: 10%; /* 相对于canvas下移10% */
+    left: 0;
+    width: 100%;
+    height: 90%; /* 相应调整高度 */
+    min-height: 550px; /* 确保3D场景有足够的显示高度 */
+    perspective: 2000px;
+    /* 添加轻微的背景渐变增强视觉效果 */
+    background: linear-gradient(to bottom, rgba(0,26,92,0.3), rgba(0,47,167,0.2)); /* 降低透明度让Three.js背景可见 */
+    z-index: 2; /* 前景层，覆盖在Three.js canvas上 */
+}
+
+/* 面板基础样式 */
+.info-panel, .monitor-panel, .parameter-panel, .fault-panel {
+    background-color: rgba(0, 26, 92, 0.7);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--gray-300);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-md);
+    overflow: auto;
+}
+
+/* 设备信息面板样式 */
+.info-panel {
+    flex: 1.2; /* 增加设备信息面板的比例 */
+    min-height: 300px; /* 设置最小高度 */
+}
+
+/* 故障面板样式调整 - 放在左侧面板 */
+.fault-panel {
+    flex: 1;
+    min-height: 250px;
+}
+
+/* 参数面板 - 放在右侧 */
+.parameter-panel {
+    flex: 1;
+    height: 100%;
+    overflow: auto;
+}
+
+/* 底部水平布局面板 - 放置实时监控面板 */
+.bottom-panels {
+    display: flex;
+    width: 100%;
+    height: 230px; /* 调整底部面板高度 */
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+}
+
+/* 监控面板样式 - 放在底部 */
+.monitor-panel {
+    flex: 1;
+    max-height: none;
+    /* 添加轻微的视觉变化区分面板 */
+    background-color: rgba(0, 26, 92, 0.8);
+}
+
+/* 监控网格布局优化 */
+.monitor-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 默认5列排布 */
+    gap: var(--space-sm);
+}
+
+/* 设备信息面板内容区域 */
+#equipment-info {
+    color: var(--white);
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    line-height: 1.7;
+    padding-right: var(--space-sm);
+    /* 优化字体可读性 */
+    font-size: 15px;
+}
+
+/* 监控面板项目样式优化 */
+.monitor-item {
+    margin-bottom: var(--space-sm);
+    padding: var(--space-xs);
+    border-radius: 5px;
+    /* 添加轻微的悬浮效果 */
+    transition: background-color var(--transition-fast);
+}
+
+.monitor-item:hover {
+    background-color: rgba(0, 47, 167, 0.3);
+}
+
+/* 添加半透明分隔线 */
+h2 {
+    padding-bottom: var(--space-xs);
+    margin-bottom: var(--space-sm);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--bright-yellow);
+}
+
+/* 状态指示器样式增强 */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.status-indicator:before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-indicator.running {
+    color: #4CAF50;
+}
+
+.status-indicator.running:before {
+    background-color: #4CAF50;
+    box-shadow: 0 0 5px #4CAF50;
+}
+
+.status-indicator.stopped {
+    color: #f44336;
+}
+
+.status-indicator.stopped:before {
+    background-color: #f44336;
+    box-shadow: 0 0 5px #f44336;
+}
+
+/* 响应式布局调整 - 适配更小屏幕 */
+@media (max-width: 1920px) {
+    .panoramic-container {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .main-layout {
+        height: auto;
+        min-height: 600px;
+    }
+    
+    .bottom-panels {
+        height: auto;
+        min-height: 230px;
+    }
+    
+    .monitor-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 1600px) {
+    .monitor-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 1400px) {
+    .main-layout {
+        flex-direction: row; /* 保持水平布局 */
+        flex-wrap: wrap; /* 但允许折行 */
+    }
+    
+    .side-panel {
+        width: calc(50% - var(--space-md));
+        height: auto;
+        min-height: 300px;
+    }
+    
+    .center-panel {
+        order: -1; /* 确保产线区域始终位于顶部 */
+        width: 100%;
+        margin-bottom: var(--space-md);
+    }
+    
+    .monitor-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 1024px) {
+    .main-layout {
+        flex-direction: column;
+    }
+    
+    .side-panel {
+        width: 100%;
+    }
+    
+    .monitor-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .monitor-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bottom-panels {
+        flex-direction: column;
+    }
+}
+
+/* 清除旧的不再使用的布局样式 */
+.panels-container, .left-panels, .right-panels {
+    display: none;
+} 
+
+/* --------------------------------------------------
+   新增：3D 场景自适应缩放，解决中小屏幕堆叠问题
+   -------------------------------------------------- */
+@media (max-width: 1400px) {
+    /* 缩放 90%，并保持透视角度 */
+    .production-line-3d .scene {
+        transform: scale(0.90) rotateX(20deg) rotateY(0deg) translateY(5%);
+        transform-origin: top center;
+    }
+}
+
+@media (max-width: 1200px) {
+    /* 缩放 80% */
+    .production-line-3d .scene {
+        transform: scale(0.80) rotateX(20deg) rotateY(0deg) translateY(5%);
+        transform-origin: top center;
+    }
+}
+
+@media (max-width: 1024px) {
+    /* 缩放 70%，并允许横向滚动查看完整产线 */
+    .center-panel {
+        overflow-x: auto;
+    }
+    .production-line-3d .scene {
+        transform: scale(0.70) rotateX(20deg) rotateY(0deg) translateY(5%);
+        transform-origin: top left;
+        /* 让场景宽度仍按原比例渲染 */
+        width: 1600px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* 移动端视图：缩放 60%，并将场景左对齐 */
+    .production-line-3d .scene {
+        transform: scale(0.60) rotateX(15deg) rotateY(0deg) translateY(5%);
+        transform-origin: top left;
+        width: 1400px; /* 减小基准宽度 */
+    }
+}
+
+/* 修正：确保在 <=1400px 时 3D 产线依然位于左右面板之间 */
+@media (max-width: 1400px) {
+    .main-layout {
+        flex-wrap: nowrap;   /* 保持单行布局 */
+    }
+    .center-panel {
+        order: 0;            /* 取消先前的 -1 */
+        width: auto;
+        flex: 1;
+    }
+    .side-panel {
+        width: 300px;        /* 固定侧栏宽度，避免压缩中心区域 */
+    }
+}

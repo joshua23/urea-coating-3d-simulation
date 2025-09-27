@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>尿素包膜生产线3D全景模拟</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- 引入Three.js UMD版本（兼容性更好） -->
+    <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.155.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+    <div class="panoramic-container">
+        <h1 class="title">尿素包膜生产线3D全景模拟</h1>
+        
+        <div class="controls">
+            <button id="start-all">启动所有设备</button>
+            <button id="stop-all">停止所有设备</button>
+            <button id="auto-mode">自动模式</button>
+            <button id="rotate-view">旋转视图</button>
+            <button id="reset-view">重置视图</button>
+        </div>
+        
+        <!-- 主布局结构 - 按照新的布局调整 -->
+        <div class="main-layout">
+            <!-- 左侧面板 - 设备信息和故障模拟 -->
+            <div class="side-panel left-panel">
+                <!-- 设备信息面板 -->
+                <div class="info-panel">
+                    <h2>设备信息</h2>
+                    <div id="equipment-info">
+                        点击设备查看详细信息
+                    </div>
+                </div>
+                
+                <!-- 故障模拟面板 - 移到左侧 -->
+                <div class="fault-panel">
+                    <h2>故障模拟</h2>
+                    <div class="fault-controls">
+                        <div class="fault-control-item">
+                            <label for="fault-selector">选择设备:</label>
+                            <select id="fault-selector">
+                                <option value="material-feeding">投料机</option>
+                                <option value="z-elevator">Z型提升机</option>
+                                <option value="batch-separator">液压分批筒</option>
+                                <option value="conveyor-20m">2×20米输送机</option>
+                                <option value="conveyor-14m">2×14米输送机</option>
+                                <option value="coating-machine">包膜机</option>
+                                <option value="big-elevator">17米提升装置</option>
+                                <option value="cooling-tower">冷却装置</option>
+                                <option value="packaging-machine">包装机</option>
+                            </select>
+                        </div>
+                        <div class="fault-control-item">
+                            <label for="fault-type">故障类型:</label>
+                            <select id="fault-type">
+                                <option value="overload">过载</option>
+                                <option value="jam">卡料</option>
+                                <option value="motor-failure">电机故障</option>
+                                <option value="sensor-error">传感器错误</option>
+                                <option value="power-loss">断电</option>
+                            </select>
+                        </div>
+                        <button id="trigger-fault" class="fault-button">触发故障</button>
+                        <button id="reset-fault" class="fault-button">重置故障</button>
+                    </div>
+                    <div id="fault-status" class="fault-status">
+                        系统正常运行
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 中央面板 - 生产线3D模型 -->
+            <div class="center-panel">
+                <!-- Three.js渲染容器，用于加载在线3D模型 -->
+                <div id="threejs-view"></div>
+                <div class="production-line-3d">
+                    <div class="scene">
+                        <!-- 地坑装料台和输送装置 -->
+                        <div class="equipment equipment-3d" id="material-feeding">
+                            <div class="model-container">
+                                <div class="model ground-feeding">
+                                    <div class="face front"></div>
+                                    <div class="face back"></div>
+                                    <div class="face left"></div>
+                                    <div class="face right"></div>
+                                    <div class="face top">
+                                        <div class="opening"></div>
+                                    </div>
+                                    <div class="face bottom"></div>
+                                    <div class="material"></div>
+                                    <div class="vibrator"></div>
+                                    <div class="motor"></div>
+                                </div>
+                                <div class="conveyor belt-8m">
+                                    <div class="belt"></div>
+                                    <div class="roller left-roller"></div>
+                                    <div class="roller right-roller"></div>
+                                    <div class="support"></div>
+                                </div>
+                            </div>
+                            <div class="label">电机械振动式投料机/8米皮带输送机</div>
+                            <div class="status">停止</div>
+                        </div>
+                        
+                        <!-- Z型提升机 -->
+                        <div class="equipment equipment-3d" id="z-elevator">
+                            <div class="model-container">
+                                <div class="model z-elevator-3d">
+                                    <!-- Z型机身外壳 -->
+                                    <div class="casing">
+                                        <div class="bottom-section"></div>
+                                        <div class="vertical-section"></div>
+                                        <div class="top-section"></div>
+                                    </div>
+                                    
+                                    <!-- 链条系统 -->
+                                    <div class="chain-system">
+                                        <div class="chain-track"></div>
+                                        <div class="chain-detail"></div>
+                                        <div class="top-sprocket"></div>
+                                        <div class="bottom-sprocket"></div>
+                                        <div class="buckets-container"></div>
+                                    </div>
+                                    
+                                    <!-- 驱动系统 -->
+                                    <div class="motor"></div>
+                                    
+                                    <!-- 进出料口 -->
+                                    <div class="input-port"></div>
+                                    <div class="output-port"></div>
+                                    
+                                    <!-- 物料流动 -->
+                                    <div class="input-material"></div>
+                                    <div class="output-material"></div>
+                                </div>
+                            </div>
+                            <div class="label">Z型提升机</div>
+                            <div class="status">停止</div>
+                        </div>
+                        
+                        <!-- 分批筒装置 -->
+                        <div class="equipment equipment-3d" id="batch-separator">
+                            <div class="model-container">
+                                <div class="model batch-cylinder">
+                                    <!-- 筒体部分 -->
+                                    <div class="cylinder-body"></div>
+                                    <div class="hinge-mount"></div>
+                                    <div class="port"></div>
+                                    <div class="port-connection"></div>
+                                    
+                                    <!-- 活塞杆部分 -->
+                                    <div class="piston-rod"></div>
+                                    <div class="piston-end"></div>
+                                    
+                                    <!-- 连接机构 -->
+                                    <div class="connecting-hinge"></div>
+                                    <div class="support-structure"></div>
+                                    
+                                    <!-- 物料部分 -->
+                                    <div class="material-container"></div>
+                                    <div class="material"></div>
+                                </div>
+                            </div>
+                            <div class="label">液压分批筒</div>
+                            <div class="status">停止</div>
+                        </div>
+                        
+                        <!-- 2×20米输送机 -->
+                        <div class="equipment equipment-3d" id="conveyor-20m">
+                            <div class="model-container">
+                                <div class="model conveyor-20m">
+                                    <div class="belt-container">
+                                        <div class="belt"></div>
+                                    </div>
+                                    <div class="support left-support"></div>
+                                    <div class="support right-support"></div>
+                                    <div class="material-flow"></div>
+                                </div>
+                            </div>
+                            <div class="label">2×20米输送机</div>
+                            <div class="status">停止</div>
+                        </div>
+                        
+                        <!-- 2×14米输送机 -->
+                        <div class="equipment equipment-3d" id="conveyor-14m">
+                            <div class="model-container">
+                                <div class="model conveyor-14m">
+                                    <div class="belt-container">
+                                        <div class="belt"></div>
+                                    </div>
+                                    <div class="support left-support"></div>
+                                    <div class="support right-support"></div>
+                                    <div class="material-flow"></div>
+                                </div>
+                            </div>
+                            <div class="label">2×14米输送机</div>
+                            <div class="status">停止</div>
+                        </div>
+                        
+                        <!-- 包膜装置 -->
+                        <div class="equipment equipment-3d" id="coating-machine">
+                            <div class="model-container">
+                                <div class="model coating-machine-3d">
+                                    <!-- 机器主体 -->
+                                    <div class="machine-frame"></div>
+                                    
+                                    <!-- 涂层盘系统 -->
+                                    <div class="coating-pan">
+                                        <div class="pan-interior"></div>
+                                    </div>
+                                    <div class="pan-inlet"></div>
+                                    <div class="pan-outlet"></div>
+                                    
+                                    <!-- 输送系统 -->
+                                    <div class="conveyor-system">
+                                        <div class="inlet-conveyor"></div>
+                                        <div class="outlet-conveyor"></div>
+                                    </div>
+                                    
+                                    <!-- 喷涂系统 -->
+                                    <div class="spray-system-3d">
+                                        <div class="spray-arm"></div>
+                                        <div class="spray-nozzle-1"></div>
+                                        <div class="spray-nozzle-2"></div>
+                                        <div class="spray-mist-1"></div>
+                                        <div class="spray-mist-2"></div>
+                                    </div>
+                                    
+                                    <!-- 控制系统 -->
+                                    <div class="control-panel">
+                                        <div class="panel-screen"></div>
+                                        <div class="panel-buttons"></div>
+                                    </div>
+                                    
+                                    <!-- 驱动系统 -->
+                                    <div class="drive-motor"></div>
+                                    
+                                    <!-- 物料 -->
+                                    <div class="material-3d"></div>
+                                    <div class="material-particles"></div>
+                                </div>
+                            </div>
+                            <div class="label">2.44米软包膜剂包膜机</div>
+                            <div class="status">停止</div>
+                        </div>
+                        
+                        <!-- 17米大提升运送装置 -->
+                        <div class="equipment equipment-3d" id="big-elevator">
+                            <div class="model-container">
+                                <div class="model big-elevator">
+                                    <div class="tower"></div>
+                                    <div class="belt"></div>
+                                    <div class="buckets"></div>
+                                </div>
+                            </div>
+                            <div class="label">17米大提升运送装置</div>
+                            <div class="status">停止</div>
+                        </div>
+                        
+                        <!-- 立窗式冷却装置 -->
+                        <div class="equipment equipment-3d" id="cooling-tower">
+                            <div class="model-container">
+                                <div class="model cooling-tower">
+                                    <div class="tower-body"></div>
+                                    <div class="tower-top"></div>
+                                    <div class="cooling-fins"></div>
+                                    <div class="air-flow"></div>
+                                </div>
+                            </div>
+                            <div class="label">立窗式冷却装置</div>
+                            <div class="status">停止</div>
+                        </div>
+                        
+                        <!-- 包装机 -->
+                        <div class="equipment equipment-3d" id="packaging-machine">
+                            <div class="model-container">
+                                <div class="model packaging-machine">
+                                    <div class="frame"></div>
+                                    <div class="hopper"></div>
+                                    <div class="packaging-system"></div>
+                                    <div class="output-conveyor"></div>
+                                    <div class="package"></div>
+                                </div>
+                            </div>
+                            <div class="label">包装机</div>
+                            <div class="status">停止</div>
+                        </div>
+                        
+                        <!-- 连接线 -->
+                        <div class="connections">
+                            <div class="connection" id="connection-1"></div>
+                            <div class="connection" id="connection-2"></div>
+                            <div class="connection" id="connection-3"></div>
+                            <div class="connection" id="connection-4"></div>
+                            <div class="connection" id="connection-5"></div>
+                            <div class="connection" id="connection-6"></div>
+                            <div class="connection" id="connection-7"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧面板 - 生产线参数 -->
+            <div class="side-panel right-panel">
+                <!-- 生产线参数面板 -->
+                <div class="parameter-panel">
+                    <h2>生产线参数</h2>
+                    <ul>
+                        <li><strong>总长度:</strong> 约60米</li>
+                        <li><strong>产能:</strong> 10-15吨/小时</li>
+                        <li><strong>配置设备:</strong> 投料机、Z型提升机、分批筒、皮带输送机、包膜机、冷却塔、包装机</li>
+                        <li><strong>主要参数:</strong> 
+                            <ul>
+                                <li>投料机: 电机械振动式, 42-280吨/小时, 流速40 ft/min</li>
+                                <li>投料机槽体: 48-120英寸×26-46英寸×6-15英寸</li>
+                                <li>驱动方式: 双旋转电动机(RE系列)</li>
+                                <li>输送机宽度: 650mm</li>
+                                <li>提升高度: 最高17米</li>
+                                <li>包膜机直径: 2.44米</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部水平面板 - 实时运行监控 -->
+        <div class="bottom-panels">
+            <!-- 实时运行监控面板 -->
+            <div class="monitor-panel">
+                <h2>实时运行监控</h2>
+                <div class="monitor-grid">
+                    <div class="monitor-item" data-equipment="material-feeding">
+                        <div class="item-label">投料机</div>
+                        <div class="status-indicator stopped">停止</div>
+                        <div class="parameter-control">
+                            <label>振动频率:</label>
+                            <input type="range" min="40" max="100" value="60" class="parameter-slider" data-param="vibration">
+                            <span class="parameter-value">60Hz</span>
+                        </div>
+                    </div>
+                    <div class="monitor-item" data-equipment="z-elevator">
+                        <div class="item-label">Z型提升机</div>
+                        <div class="status-indicator stopped">停止</div>
+                        <div class="parameter-control">
+                            <label>运行速度:</label>
+                            <input type="range" min="9" max="11" value="10" step="0.1" class="parameter-slider" data-param="speed">
+                            <span class="parameter-value">10m/min</span>
+                        </div>
+                    </div>
+                    <div class="monitor-item" data-equipment="batch-separator">
+                        <div class="item-label">液压分批筒</div>
+                        <div class="status-indicator stopped">停止</div>
+                        <div class="parameter-control">
+                            <label>循环时间:</label>
+                            <input type="range" min="4" max="12" value="8" class="parameter-slider" data-param="cycle">
+                            <span class="parameter-value">8秒</span>
+                        </div>
+                    </div>
+                    <div class="monitor-item" data-equipment="conveyor-20m">
+                        <div class="item-label">2×20米输送机</div>
+                        <div class="status-indicator stopped">停止</div>
+                        <div class="parameter-control">
+                            <label>传送速度:</label>
+                            <input type="range" min="20" max="60" value="40" class="parameter-slider" data-param="speed">
+                            <span class="parameter-value">40m/min</span>
+                        </div>
+                    </div>
+                    <div class="monitor-item" data-equipment="conveyor-14m">
+                        <div class="item-label">2×14米输送机</div>
+                        <div class="status-indicator stopped">停止</div>
+                        <div class="parameter-control">
+                            <label>传送速度:</label>
+                            <input type="range" min="20" max="60" value="40" class="parameter-slider" data-param="speed">
+                            <span class="parameter-value">40m/min</span>
+                        </div>
+                    </div>
+                    <div class="monitor-item" data-equipment="coating-machine">
+                        <div class="item-label">包膜机</div>
+                        <div class="status-indicator stopped">停止</div>
+                        <div class="parameter-control">
+                            <label>旋转速度:</label>
+                            <input type="range" min="8" max="10" value="9" step="0.1" class="parameter-slider" data-param="rotation">
+                            <span class="parameter-value">9RPM</span>
+                        </div>
+                    </div>
+                    <div class="monitor-item" data-equipment="big-elevator">
+                        <div class="item-label">17米提升装置</div>
+                        <div class="status-indicator stopped">停止</div>
+                        <div class="parameter-control">
+                            <label>提升速度:</label>
+                            <input type="range" min="5" max="15" value="10" class="parameter-slider" data-param="speed">
+                            <span class="parameter-value">10m/min</span>
+                        </div>
+                    </div>
+                    <div class="monitor-item" data-equipment="cooling-tower">
+                        <div class="item-label">冷却装置</div>
+                        <div class="status-indicator stopped">停止</div>
+                        <div class="parameter-control">
+                            <label>风速:</label>
+                            <input type="range" min="10" max="30" value="20" class="parameter-slider" data-param="airflow">
+                            <span class="parameter-value">20m/s</span>
+                        </div>
+                    </div>
+                    <div class="monitor-item" data-equipment="packaging-machine">
+                        <div class="item-label">包装机</div>
+                        <div class="status-indicator stopped">停止</div>
+                        <div class="parameter-control">
+                            <label>包装速度:</label>
+                            <input type="range" min="5" max="15" value="10" class="parameter-slider" data-param="speed">
+                            <span class="parameter-value">10袋/min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
