@@ -106,7 +106,7 @@ body {
     height: 100%;
     position: relative;
     transform-style: preserve-3d;
-    transform: rotateX(20deg) rotateY(0deg) translateY(5%); /* 调整为向下偏移5%，避免与按钮重叠 */
+    transform: rotateX(20deg) rotateY(0deg) translateY(-20%); /* 向上移动20% */
     transition: transform 1.5s ease;
     display: flex;
     align-items: center; /* 垂直居中 */
@@ -2461,10 +2461,11 @@ h2 {
 /* 生产线3D场景样式优化 */
 .production-line-3d {
     position: absolute; /* 绝对定位 */
-    top: 10%; /* 相对于canvas下移10% */
+    top: 20%; /* 向上移动到页面上方 */
     left: 0;
     width: 100%;
-    height: 90%; /* 相应调整高度 */
+    height: 80%; /* 调整高度 */
+    transform: translateY(-10%); /* 微调位置 */
     min-height: 550px; /* 确保3D场景有足够的显示高度 */
     perspective: 2000px;
     /* 添加轻微的背景渐变增强视觉效果 */
@@ -2684,16 +2685,16 @@ h2 {
 @media (max-width: 1400px) {
     /* 缩放 90%，并保持透视角度 */
     .production-line-3d .scene {
-        transform: scale(0.90) rotateX(20deg) rotateY(0deg) translateY(5%);
-        transform-origin: top center;
+        transform: scale(0.90) rotateX(20deg) rotateY(0deg) translateY(0);
+        transform-origin: center center;
     }
 }
 
 @media (max-width: 1200px) {
     /* 缩放 80% */
     .production-line-3d .scene {
-        transform: scale(0.80) rotateX(20deg) rotateY(0deg) translateY(5%);
-        transform-origin: top center;
+        transform: scale(0.80) rotateX(20deg) rotateY(0deg) translateY(0);
+        transform-origin: center center;
     }
 }
 
@@ -2703,8 +2704,8 @@ h2 {
         overflow-x: auto;
     }
     .production-line-3d .scene {
-        transform: scale(0.70) rotateX(20deg) rotateY(0deg) translateY(5%);
-        transform-origin: top left;
+        transform: scale(0.70) rotateX(20deg) rotateY(0deg) translateY(0);
+        transform-origin: center center;
         /* 让场景宽度仍按原比例渲染 */
         width: 1600px;
     }
@@ -2713,8 +2714,8 @@ h2 {
 @media (max-width: 768px) {
     /* 移动端视图：缩放 60%，并将场景左对齐 */
     .production-line-3d .scene {
-        transform: scale(0.60) rotateX(15deg) rotateY(0deg) translateY(5%);
-        transform-origin: top left;
+        transform: scale(0.60) rotateX(15deg) rotateY(0deg) translateY(0);
+        transform-origin: center center;
         width: 1400px; /* 减小基准宽度 */
     }
 }

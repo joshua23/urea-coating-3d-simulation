@@ -1,0 +1,813 @@
+/* ========================================
+   尿素包膜生产线3D全景模拟系统
+   14英寸笔记本屏幕响应式优化样式表
+   针对1366×768和1920×1080分辨率优化
+   ======================================== */
+
+/* ===========================================
+   1. 核心响应式容器优化
+   =========================================== */
+
+/* 移除固定尺寸，改为响应式容器 */
+@media screen and (max-width: 1920px) {
+    .panoramic-container {
+        width: 100%;
+        height: 100vh;
+        padding: 8px;
+        max-width: none;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+/* ===========================================
+   2. 14英寸高端屏幕 (1920×1080)
+   =========================================== */
+@media screen and (max-width: 1920px) and (max-height: 1080px) {
+    :root {
+        --font-size-base: 15px;
+        --space-xs: 0.4rem;
+        --space-sm: 0.8rem;
+        --space-md: 1.2rem;
+        --space-lg: 1.8rem;
+    }
+
+    .title {
+        font-size: 30px;
+        margin-bottom: 8px;
+    }
+
+    .controls {
+        margin-bottom: 16px;
+        gap: 10px;
+    }
+
+    button {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+
+    /* 3D场景微调 */
+    .scene {
+        transform: scale(0.9) rotateX(15deg) translateY(-15%);
+    }
+
+    /* 设备间距优化 */
+    #material-feeding { left: 5%; transform: scale(0.85); }
+    #z-elevator { left: 13%; transform: scale(0.85); }
+    #batch-separator { left: 22%; transform: scale(0.85); }
+    #conveyor-20m { left: 32%; transform: scale(0.8); }
+    #conveyor-14m { left: 46%; transform: scale(0.8); }
+    #coating-machine { left: 59%; transform: scale(0.85); }
+    #big-elevator { left: 69%; transform: scale(0.8); }
+    #cooling-tower { left: 77%; transform: scale(0.85); }
+    #packaging-machine { left: 85%; transform: scale(0.85); }
+}
+
+/* ===========================================
+   3. 14英寸中端屏幕 (1600×900)
+   =========================================== */
+@media screen and (max-width: 1600px) and (max-height: 900px) {
+    :root {
+        --font-size-base: 14px;
+        --space-xs: 0.3rem;
+        --space-sm: 0.6rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+    }
+
+    .title {
+        font-size: 28px;
+        margin-bottom: 6px;
+    }
+
+    .controls {
+        margin-bottom: 14px;
+        gap: 8px;
+    }
+
+    button {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    /* 3D场景缩放调整 */
+    .scene {
+        transform: scale(0.8) rotateX(12deg) translateY(-15%);
+    }
+
+    /* 设备布局调整 */
+    #material-feeding { left: 4%; transform: scale(0.75); }
+    #z-elevator { left: 12%; transform: scale(0.75); }
+    #batch-separator { left: 21%; transform: scale(0.75); }
+    #conveyor-20m { left: 31%; transform: scale(0.7); width: 280px; }
+    #conveyor-14m { left: 45%; transform: scale(0.7); width: 180px; }
+    #coating-machine { left: 58%; transform: scale(0.75); }
+    #big-elevator { left: 68%; transform: scale(0.7); }
+    #cooling-tower { left: 76%; transform: scale(0.75); }
+    #packaging-machine { left: 84%; transform: scale(0.75); }
+}
+
+/* ===========================================
+   4. 14英寸标准屏幕 (1440×900)
+   =========================================== */
+@media screen and (max-width: 1440px) and (max-height: 900px) {
+    :root {
+        --font-size-base: 14px;
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 0.9rem;
+        --space-lg: 1.4rem;
+    }
+
+    .title {
+        font-size: 26px;
+        margin-bottom: 6px;
+        letter-spacing: -0.3px;
+    }
+
+    .controls {
+        margin-bottom: 12px;
+        gap: 8px;
+    }
+
+    button {
+        padding: 8px 14px;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    /* 主布局调整 */
+    .main-layout {
+        gap: 6px;
+    }
+
+    /* 3D场景优化 */
+    .scene {
+        transform: scale(0.75) rotateX(10deg) translateY(-15%);
+    }
+
+    /* 设备精确定位 - 防止重叠 */
+    #material-feeding {
+        left: 4%;
+        transform: scale(0.7);
+        width: 130px;
+    }
+
+    #z-elevator {
+        left: 11%;
+        transform: scale(0.7);
+        width: 70px;
+        top: 38%;
+    }
+
+    #batch-separator {
+        left: 20%;
+        transform: scale(0.7);
+        width: 100px;
+    }
+
+    #conveyor-20m {
+        left: 30%;
+        transform: scale(0.65);
+        width: 260px;
+    }
+
+    #conveyor-14m {
+        left: 44%;
+        transform: scale(0.65);
+        width: 170px;
+    }
+
+    #coating-machine {
+        left: 56%;
+        transform: scale(0.7);
+        width: 120px;
+    }
+
+    #big-elevator {
+        left: 66%;
+        transform: scale(0.65);
+        width: 85px;
+        top: 33%;
+    }
+
+    #cooling-tower {
+        left: 74%;
+        transform: scale(0.7);
+        width: 105px;
+    }
+
+    #packaging-machine {
+        left: 82%;
+        transform: scale(0.7);
+        width: 140px;
+    }
+
+    /* 连接线优化 */
+    .connection {
+        height: 6px;
+        opacity: 0.8;
+    }
+
+    /* 标签样式调整 */
+    .label {
+        font-size: 11px;
+        padding: 4px 8px;
+        bottom: -35px;
+        font-weight: 500;
+    }
+
+    .status {
+        font-size: 10px;
+        padding: 2px 6px;
+        bottom: -50px;
+    }
+}
+
+/* ===========================================
+   5. 14英寸主流屏幕 (1366×768) - 最重要的断点
+   =========================================== */
+@media screen and (max-width: 1366px) and (max-height: 768px) {
+    :root {
+        --font-size-base: 13px;
+        --space-xs: 0.2rem;
+        --space-sm: 0.4rem;
+        --space-md: 0.7rem;
+        --space-lg: 1.1rem;
+    }
+
+    /* 标题区域压缩 */
+    .title {
+        font-size: 22px;
+        margin-bottom: 4px;
+        line-height: 1;
+        padding: 4px 0;
+    }
+
+    /* 控制按钮紧凑化 */
+    .controls {
+        margin-bottom: 8px;
+        gap: 6px;
+        height: 32px;
+    }
+
+    button {
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 500;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    /* 主布局优化 */
+    .main-layout {
+        gap: 4px;
+        height: calc(100vh - 100px);
+    }
+
+    /* 3D场景关键优化 */
+    .production-line-3d {
+        position: absolute;
+        top: 15%;  /* 向上移动 */
+        left: 0;
+        width: 100%;
+        height: 80%;
+        transform: translateY(-5%) scale(0.85);
+        transform-origin: center center;
+    }
+
+    .scene {
+        transform: scale(0.62) rotateX(6deg) translateY(-15%);
+        width: 2400px; /* 增加场景宽度，给设备更多空间 */
+    }
+
+    /* 设备布局优化 - 关键调整防止重叠 */
+    #material-feeding {
+        left: 2%;
+        transform: scale(0.6);
+        width: 110px;
+        height: 80px;
+        top: 52%;
+    }
+
+    #z-elevator {
+        left: 9%;
+        transform: scale(0.6);
+        width: 60px;
+        height: 200px;
+        top: 40%;
+    }
+
+    #batch-separator {
+        left: 17%;
+        transform: scale(0.6);
+        width: 85px;
+        height: 120px;
+        top: 45%;
+    }
+
+    #conveyor-20m {
+        left: 26%;
+        transform: scale(0.55);
+        width: 240px;
+        height: 50px;
+        top: 50%;
+    }
+
+    #conveyor-14m {
+        left: 41%;
+        transform: scale(0.55);
+        width: 160px;
+        height: 50px;
+        top: 48%;
+    }
+
+    #coating-machine {
+        left: 53%;
+        transform: scale(0.6);
+        width: 105px;
+        height: 105px;
+        top: 52%;
+    }
+
+    #big-elevator {
+        left: 63%;
+        transform: scale(0.55);
+        width: 75px;
+        height: 240px;
+        top: 35%;
+    }
+
+    #cooling-tower {
+        left: 71%;
+        transform: scale(0.6);
+        width: 95px;
+        height: 150px;
+        top: 44%;
+    }
+
+    #packaging-machine {
+        left: 80%;
+        transform: scale(0.6);
+        width: 130px;
+        height: 95px;
+        top: 52%;
+    }
+
+    /* 连接线细化 */
+    .connection {
+        height: 5px;
+        opacity: 0.7;
+        background-color: rgba(108, 117, 125, 0.5);
+    }
+
+    #connection-1 { left: 6%; top: 49%; width: 3%; }
+    #connection-2 { left: 12%; top: 42%; width: 5%; }
+    #connection-3 { left: 20%; top: 48%; width: 6%; }
+    #connection-4 { left: 36%; top: 49%; width: 5%; }
+    #connection-5 { left: 48%; top: 50%; width: 5%; }
+    #connection-6 { left: 58%; top: 48%; width: 5%; }
+    #connection-7 { left: 66%; top: 50%; width: 5%; }
+
+    /* 标签和状态优化 */
+    .label {
+        font-size: 10px;
+        padding: 3px 6px;
+        bottom: -28px;
+        font-weight: 600;
+        background-color: rgba(255, 255, 255, 0.95);
+        white-space: nowrap;
+        line-height: 1;
+    }
+
+    .status {
+        font-size: 9px;
+        padding: 2px 5px;
+        bottom: -42px;
+        font-weight: 500;
+        min-width: 35px;
+        text-align: center;
+    }
+
+    /* 侧边面板折叠优化 */
+    .side-panel {
+        transition: all 0.3s ease;
+        position: relative;
+        background: rgba(0, 26, 92, 0.92);
+    }
+
+    .left-panel,
+    .right-panel {
+        width: 32px;
+        overflow: hidden;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    /* 悬停展开效果 */
+    .left-panel:hover,
+    .right-panel:hover {
+        width: 200px;
+        z-index: 1000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        background: rgba(0, 26, 92, 0.98);
+    }
+
+    /* 折叠时内容隐藏 */
+    .left-panel:not(:hover) .info-panel,
+    .left-panel:not(:hover) .fault-panel,
+    .right-panel:not(:hover) .parameter-panel {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-10px);
+    }
+
+    /* 折叠指示图标 */
+    .side-panel::before {
+        content: '▶';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--bright-yellow);
+        font-size: 14px;
+        z-index: 10;
+        transition: all 0.3s ease;
+    }
+
+    .side-panel:hover::before {
+        opacity: 0;
+        transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    /* 面板内容紧凑化 */
+    .info-panel h2,
+    .fault-panel h2,
+    .parameter-panel h2 {
+        font-size: 14px;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+    }
+
+    .info-panel,
+    .fault-panel,
+    .parameter-panel {
+        padding: 8px;
+    }
+
+    /* 参数列表优化 */
+    .parameter-panel ul {
+        padding-left: 12px;
+        font-size: 11px;
+        line-height: 1.3;
+    }
+
+    .parameter-panel li {
+        margin-bottom: 3px;
+    }
+
+    .parameter-panel ul ul {
+        padding-left: 10px;
+        font-size: 10px;
+        margin-top: 2px;
+    }
+
+    /* 故障控制面板 */
+    .fault-controls {
+        font-size: 11px;
+    }
+
+    .fault-control-item {
+        margin-bottom: 6px;
+    }
+
+    .fault-control-item label {
+        font-size: 11px;
+        margin-bottom: 2px;
+    }
+
+    .fault-control-item select {
+        font-size: 11px;
+        padding: 3px 6px;
+        height: 24px;
+    }
+
+    .fault-button {
+        font-size: 11px;
+        padding: 4px 8px;
+        margin: 2px;
+        height: 26px;
+    }
+
+    /* 底部监控面板优化 */
+    .bottom-panels {
+        max-height: 140px;
+        background: rgba(0, 26, 92, 0.9);
+        border-radius: 6px 6px 0 0;
+        overflow-y: auto;
+    }
+
+    .monitor-panel {
+        padding: 6px 8px;
+    }
+
+    .monitor-panel h2 {
+        font-size: 13px;
+        margin-bottom: 6px;
+        line-height: 1;
+    }
+
+    .monitor-grid {
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 6px;
+        padding: 6px;
+    }
+
+    .monitor-item {
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+    }
+
+    .item-label {
+        font-size: 10px;
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+
+    .status-indicator {
+        font-size: 9px;
+        padding: 2px 4px;
+        margin-bottom: 3px;
+        border-radius: 3px;
+    }
+
+    .parameter-control {
+        margin-top: 3px;
+    }
+
+    .parameter-control label {
+        font-size: 9px;
+        display: block;
+        margin-bottom: 2px;
+        opacity: 0.8;
+    }
+
+    .parameter-slider {
+        width: 100%;
+        height: 3px;
+        cursor: pointer;
+    }
+
+    .parameter-value {
+        font-size: 9px;
+        display: inline-block;
+        margin-top: 1px;
+        font-weight: 600;
+        color: var(--bright-yellow);
+    }
+
+    /* 滚动条优化 */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 219, 0, 0.3);
+        border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* ===========================================
+   6. 超小屏幕优化 (1280×720)
+   =========================================== */
+@media screen and (max-width: 1280px) and (max-height: 720px) {
+    .title {
+        font-size: 20px;
+        margin-bottom: 2px;
+    }
+
+    .controls {
+        margin-bottom: 6px;
+        height: 28px;
+    }
+
+    button {
+        padding: 4px 8px;
+        font-size: 11px;
+        height: 24px;
+    }
+
+    .scene {
+        transform: scale(0.55) rotateX(5deg) translateY(-15%);
+    }
+
+    /* 极致压缩设备 */
+    .equipment {
+        transform: scale(0.5);
+    }
+
+    /* 隐藏次要信息 */
+    .parameter-panel ul ul {
+        display: none;
+    }
+
+    .monitor-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* 只显示核心设备监控 */
+    .monitor-item:nth-child(n+7) {
+        display: none;
+    }
+
+    /* 底部面板默认收起 */
+    .bottom-panels {
+        max-height: 30px;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .bottom-panels:hover {
+        max-height: 120px;
+    }
+}
+
+/* ===========================================
+   7. Three.js容器优化
+   =========================================== */
+#threejs-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+/* 14英寸屏幕Three.js性能优化 */
+@media screen and (max-width: 1440px) {
+    #threejs-view canvas {
+        image-rendering: optimizeSpeed;
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+
+/* ===========================================
+   8. 触摸设备优化
+   =========================================== */
+@media (pointer: coarse) {
+    button {
+        min-height: 40px;
+        min-width: 60px;
+    }
+
+    .parameter-slider {
+        height: 5px;
+        -webkit-appearance: none;
+    }
+
+    .parameter-slider::-webkit-slider-thumb {
+        width: 16px;
+        height: 16px;
+    }
+
+    .equipment {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .side-panel {
+        width: 40px;
+    }
+
+    .side-panel:active {
+        width: 220px;
+    }
+}
+
+/* ===========================================
+   9. 高DPI屏幕优化
+   =========================================== */
+@media (-webkit-min-device-pixel-ratio: 1.5),
+       (min-resolution: 144dpi) {
+    .label,
+    .status {
+        font-weight: 500;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .face,
+    .chamber,
+    .belt {
+        border-width: 0.5px;
+    }
+}
+
+/* ===========================================
+   10. 性能优化类
+   =========================================== */
+.reduce-motion * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+}
+
+.laptop-14inch .equipment {
+    will-change: auto;
+    backface-visibility: hidden;
+}
+
+.laptop-14inch .scene {
+    will-change: transform;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+}
+
+/* ===========================================
+   11. 打印样式
+   =========================================== */
+@media print {
+    .controls,
+    .bottom-panels,
+    .side-panel {
+        display: none !important;
+    }
+
+    .scene {
+        transform: none !important;
+    }
+
+    .production-line-3d {
+        page-break-inside: avoid;
+    }
+}
+
+/* ===========================================
+   12. 辅助功能和可访问性
+   =========================================== */
+@media (prefers-contrast: high) {
+    .label {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+        font-weight: bold;
+    }
+
+    .status {
+        border: 2px solid currentColor;
+    }
+
+    button {
+        border: 2px solid currentColor;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ===========================================
+   13. 自定义滚动条美化
+   =========================================== */
+@media screen and (max-width: 1440px) {
+    /* Webkit浏览器 */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 219, 0, 0.4);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 219, 0, 0.6);
+    }
+
+    /* Firefox */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 219, 0, 0.4) rgba(0, 0, 0, 0.1);
+    }
+}
